@@ -11,15 +11,15 @@ from passlib.context import CryptContext
 
 class User(SQLModel, table=True):
     user_id : int = Field(default=None, primary_key=True)
-    username : str
+    username: str = Field(index=True, unique=True)
     email: str = Field(nullable=False, unique=True, index=True)
     password_hash : str
     created_at: datetime
     
 class pair(SQLModel, table = True):
     pair_id:int = Field(default=None, primary_key=True)
-    user_a_id : int
-    user_b_id : int
+    user_a_name : str
+    user_b_name : str
     created_pair_at : datetime
 
 class note(SQLModel, table = True):
@@ -133,3 +133,107 @@ def get_user(email: str, password: str, session: SessionDep):
         }
     }
     
+@app.post("/create_pair")
+def create_pair(user_a_username: str, user_b_username: str, session: SessionDep):
+    
+    user_a = session.exec(select(User).where(User.username==user_a_username)).first()
+    user_b = session.exec(select(User).where(User.username==user_b_username)).first()
+    
+    if user_a is None:
+        raise HTTPException(status_code = 400, detail = "User A does not exists" )
+    if user_b is None:
+        raise HTTPException(status_code = 401, detail = "User B does not exists" )
+    
+    existing_pair = session.exec(
+        select(pair).where(
+            ((pair.user_a_name == user_a_username) & (pair.user_b_name == user_b_username)) |
+            ((pair.user_a_name == user_b_username) & (pair.user_b_name == user_a_username))
+
+        )
+    ).first()
+    
+    if existing_pair:
+        raise HTTPException(status_code = 409, detail = "Pair already exists")
+    
+    new_pair = pair(
+        user_a_name= user_a_username,
+        user_b_name=user_b_username,
+        created_pair_at = datetime.utcnow()
+    )
+    
+    session.add(new_pair)
+    session.commit()
+    session.refresh(new_pair)
+    
+    return{"message" : "Pair created sucessfully", "pair_id": new_pair.pair_id}
+    
+@app.post("/submit_entry")
+def submit_entry(pair_id: int, username: str, entry: str, session: SessionDep):
+    # Fetch the user
+    user = session.exec(select(User).where(User.username == username)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    pair_obj = session.exec(select(pair).where(pair.pair_id == pair_id)).first()
+    if not pair_obj:
+        raise HTTPException(status_code=404, detail="Pair not found")
+
+    if username != pair_obj.user_a_name and username != pair_obj.user_b_name:
+        raise HTTPException(status_code=403, detail="You are not a member of this pair")
+
+    today = date.today()
+    note_obj = session.exec(
+        select(note).where((note.pair_id == pair_id) & (note.date == today))
+    ).first()
+
+    if not note_obj:
+        note_obj = note(
+            pair_id=pair_id,
+            date=today
+        )
+        session.add(note_obj)
+        session.commit()
+        session.refresh(note_obj)
+
+    if username == pair_obj.user_a_name:
+        note_obj.user_a_entry = entry
+        note_obj.user_a_id = user.user_id
+        note_obj.user_a_updated = datetime.utcnow()
+    elif username == pair_obj.user_b_name:
+        note_obj.user_b_entry = entry
+        note_obj.user_b_id = user.user_id
+        note_obj.user_b_updated = datetime.utcnow()
+
+    session.add(note_obj)
+    session.commit()
+    session.refresh(note_obj)
+
+    return {"message": "Entry submitted successfully", "note_id": note_obj.note_id}
+
+@app.put("/add_note_entry")
+def add_note_entry(pair_id: int, date: date, user_id: int, entry: str, session:SessionDep):
+    
+    pair_obj = session.exec(select(pair).where(pair.pair_id == pair_id)).first()
+    if not pair_obj:
+        raise HTTPException(status_code = 404, detail = "Pair does not exists")
+    
+    note_obj = session.exec(
+        select(note).where((note.pair_id == pair_id) & (note.date == date)).first()
+    )
+    if not note_obj:
+        raise HTTPException(status_code=405, detail="Note for given pair and date not found")
+    
+    if user_id == pair_obj.user_a_name:
+        note_obj.user_a_entry = entry
+        note_obj.user_a_updated = datetime.utcnow()
+    elif user_id == pair_obj.user_b_name:
+        note_obj.user_b_entry = entry
+        note_obj.user_b_updated = datetime.utcnow()
+    else:
+        raise HTTPException(status_code=403, detail = "User is not part of pair")
+        
+    session.add(note_obj)
+    session.commit()
+    session.refresh(note_obj)
+    
+    return {"message": "Note entry updated successfully", "note_id": note_obj.note_id}
