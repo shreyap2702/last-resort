@@ -22,12 +22,13 @@ class pair(SQLModel, table = True):
     user_b_name : str
     created_pair_at : datetime
 
-class note(SQLModel, table = True):
-    note_id: int = Field(default=None, primary_key=True)
+class note(SQLModel, table=True):
+    note_id: Optional[int] = Field(default=None, primary_key=True)
     pair_id: int = Field(foreign_key="pair.pair_id")
     date: date
-    user_a_id : int
-    user_b_id : int
+
+    user_a_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
+    user_b_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
     user_a_entry: Optional[str] = None
     user_b_entry: Optional[str] = None
     user_a_updated: Optional[datetime] = None
@@ -192,9 +193,8 @@ def submit_entry(pair_id: int, username: str, entry: str, session: SessionDep):
             date=today
         )
         session.add(note_obj)
-        session.commit()
-        session.refresh(note_obj)
 
+# Assign user-specific entry and ID
     if username == pair_obj.user_a_name:
         note_obj.user_a_entry = entry
         note_obj.user_a_id = user.user_id
@@ -204,9 +204,10 @@ def submit_entry(pair_id: int, username: str, entry: str, session: SessionDep):
         note_obj.user_b_id = user.user_id
         note_obj.user_b_updated = datetime.utcnow()
 
-    session.add(note_obj)
+
     session.commit()
     session.refresh(note_obj)
+
 
     return {"message": "Entry submitted successfully", "note_id": note_obj.note_id}
 
@@ -237,3 +238,17 @@ def add_note_entry(pair_id: int, date: date, user_id: int, entry: str, session:S
     session.refresh(note_obj)
     
     return {"message": "Note entry updated successfully", "note_id": note_obj.note_id}
+
+def delete_user(user_id: int, session: Session = Depends(get_session)):
+    user = session.exec(select(User).where(User.user_id == user_id)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    session.delete(user)
+    session.commit()
+    return {"message": "User deleted successfully"}
+
+
+@app.delete("/users/{user_id}")
+def api_delete_user(user_id: int, session: Session = Depends(get_session)):
+    return delete_user(user_id, session)
