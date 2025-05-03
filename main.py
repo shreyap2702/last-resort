@@ -8,7 +8,8 @@ import jwt
 from datetime import datetime, timedelta
 from typing import Union
 from passlib.context import CryptContext
-
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
@@ -40,6 +41,10 @@ class note(SQLModel, table=True):
     user_a_updated: Optional[datetime] = None
     user_b_updated: Optional[datetime] = None
     
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
@@ -85,6 +90,15 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI()
 
+# Enable CORS for all origins (for development)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, set this to your frontend's URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Mount the frontend directory for static files
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 
@@ -123,26 +137,49 @@ def create_user(username: str, email: str, password: str, session: SessionDep):
     session.commit()
     session.refresh(new_user)
     return {"message":"Registered Succesfully", "user_id": new_user.user_id}
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
      
 @app.post("/login")
-def get_user(email: str, password: str, session: SessionDep):
-    
+def get_user(request: LoginRequest, session: SessionDep):
+    email = request.email
+    password = request.password
     user_email = session.exec(select(User).where(User.email==email)).first()
-    
     if user_email is None:
          raise HTTPException(status_code = 400, detail = "Email not registered")
-    
     if not verify_password(password, user_email.password_hash):
         raise HTTPException(status_code=401, detail="Incorrect password")
-    
     token = create_access_token(data = {"sub": user_email.email})
-    return{
+
+    # Get all pairs where this user is user_a_name or user_b_name
+    pairs = session.exec(
+        select(pair).where(
+            (pair.user_a_name == user_email.username) | (pair.user_b_name == user_email.username)
+        )
+    ).all()
+    
+    # Format pair information
+    pair_info = []
+    for p in pairs:
+        partner_name = p.user_b_name if p.user_a_name == user_email.username else p.user_a_name
+        pair_info.append({
+            "pair_id": p.pair_id,
+            "partner": partner_name,
+            "created_at": p.created_pair_at
+        })
+
+    return {
         "access_token": token,
         "token_type": "bearer",
         "user": {
             "user_id": user_email.user_id,
             "username": user_email.username,
             "email": user_email.email,
+            "created_at": user_email.created_at,
+            "pairs": pair_info
         }
     }
     

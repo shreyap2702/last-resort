@@ -5,134 +5,154 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Last-Resort</title>
   <!-- Sora font for a modern, elegant look -->
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Sora', system-ui, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(120deg, #1a2233 0%, #232b3b 100%);
+      font-family: 'Manrope', 'Inter', Arial, sans-serif;
+      background: linear-gradient(120deg, #181c24 0%, #22293a 100%);
       color: #e6eaf3;
       min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      letter-spacing: 0.01em;
     }
     .container {
-      max-width: 480px;
-      margin: 40px auto;
-      padding: 32px 24px;
-      background: #232837e6;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-      border-radius: 20px;
+      max-width: 540px;
+      margin: 48px auto;
+      padding: 40px 28px;
+      background: rgba(35, 40, 55, 0.92);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+      border-radius: 24px;
       position: relative;
       z-index: 2;
+      border: 1.5px solid #2d3957;
     }
     .hero {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 36px;
     }
     .hero h1 {
-      font-size: 2.3rem;
-      font-weight: 700;
-      color: #4ea1ff;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-      font-family: 'Sora', Arial, sans-serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: #5bbcff;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      font-family: 'Manrope', Arial, sans-serif;
     }
     .hero p {
       color: #b3c6e0;
-      font-size: 1.1rem;
+      font-size: 1.13rem;
       margin-bottom: 0;
+      font-weight: 400;
+      letter-spacing: 0.03em;
     }
     .nav {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 24px;
-      gap: 8px;
+      margin-bottom: 28px;
+      gap: 10px;
     }
     .nav button {
       flex: 1;
-      background: #181c24;
-      color: #4ea1ff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 0;
-      font-size: 1rem;
-      font-weight: 600;
+      background: #191e2a;
+      color: #5bbcff;
+      border: 1.5px solid #2d3957;
+      border-radius: 10px;
+      padding: 11px 0;
+      font-size: 1.01rem;
+      font-weight: 400;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.18s, color 0.18s, border 0.18s;
       font-family: inherit;
+      letter-spacing: 0.04em;
     }
     .nav button.active, .nav button:hover {
-      background: #4ea1ff;
+      background: #5bbcff;
       color: #181c24;
+      border: 1.5px solid #5bbcff;
     }
     h2 {
       color: #e6eaf3;
-      font-family: 'Sora', Arial, sans-serif;
-      margin-bottom: 12px;
-      font-weight: 600;
-      font-size: 1.3rem;
+      font-family: 'Manrope', Arial, sans-serif;
+      margin-bottom: 14px;
+      font-weight: 500;
+      font-size: 1.22rem;
+      letter-spacing: 0.04em;
     }
     form {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      margin-top: 10px;
+      gap: 13px;
+      margin-top: 8px;
     }
     label {
-      font-size: 0.98rem;
+      font-size: 0.97rem;
       color: #b3c6e0;
       margin-bottom: 2px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
     }
     input, textarea {
       font-family: inherit;
       background: #181c24;
       color: #e6eaf3;
-      border: 1.5px solid #2d3957;
-      border-radius: 8px;
-      padding: 10px 12px;
+      border: 1.2px solid #2d3957;
+      border-radius: 9px;
+      padding: 10px 13px;
       font-size: 1rem;
-      transition: border 0.2s, box-shadow 0.2s;
+      font-weight: 300;
+      transition: border 0.18s, box-shadow 0.18s;
       outline: none;
+      letter-spacing: 0.02em;
     }
     input:focus, textarea:focus {
-      border: 1.5px solid #4ea1ff;
-      box-shadow: 0 0 0 2px #4ea1ff33;
+      border: 1.5px solid #5bbcff;
+      box-shadow: 0 0 0 2px #5bbcff33;
+      background: #1e2533;
     }
     button[type="submit"] {
       font-family: inherit;
-      background: #4ea1ff;
+      background: linear-gradient(90deg, #5bbcff 0%, #82c4ff 100%);
       color: #181c24;
       border: none;
-      border-radius: 8px;
-      padding: 10px 0;
-      font-size: 1rem;
-      font-weight: 600;
+      border-radius: 9px;
+      padding: 11px 0;
+      font-size: 1.01rem;
+      font-weight: 500;
       cursor: pointer;
-      margin-top: 6px;
-      transition: background 0.2s, color 0.2s;
+      margin-top: 7px;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #5bbcff22;
+      letter-spacing: 0.04em;
     }
     button[type="submit"]:hover, button[type="submit"]:focus {
-      background: #82c4ff;
+      background: linear-gradient(90deg, #82c4ff 0%, #5bbcff 100%);
       color: #181c24;
+      box-shadow: 0 4px 16px #5bbcff33;
     }
     .hidden {
       display: none;
     }
     .msg {
       margin: 10px 0 0 0;
-      color: #4ea1ff;
+      color: #5bbcff;
       font-size: 1rem;
       text-align: center;
+      font-weight: 400;
+      letter-spacing: 0.03em;
     }
     .result-card {
-      background: #181c24;
-      border-radius: 10px;
-      padding: 16px;
-      margin-top: 16px;
+      background: #191e2a;
+      border-radius: 16px;
+      padding: 22px 18px 18px 18px;
+      margin-top: 18px;
       color: #e6eaf3;
-      box-shadow: 0 2px 8px #0002;
+      box-shadow: 0 2px 12px #0003;
       font-size: 1rem;
       word-break: break-word;
+      border: 1.2px solid #232b3b;
+      font-weight: 400;
+      letter-spacing: 0.02em;
     }
     .bg-accent {
       position: fixed;
@@ -140,9 +160,9 @@
       left: -120px;
       width: 400px;
       height: 400px;
-      background: radial-gradient(circle, #4ea1ff55 0%, #232b3b00 80%);
+      background: radial-gradient(circle, #5bbcff44 0%, #232b3b00 80%);
       z-index: 0;
-      filter: blur(8px);
+      filter: blur(10px);
       pointer-events: none;
     }
     .bg-accent2 {
@@ -151,18 +171,36 @@
       right: -120px;
       width: 400px;
       height: 400px;
-      background: radial-gradient(circle, #4ea1ff33 0%, #232b3b00 80%);
+      background: radial-gradient(circle, #5bbcff22 0%, #232b3b00 80%);
       z-index: 0;
-      filter: blur(12px);
+      filter: blur(14px);
       pointer-events: none;
     }
-    @media (max-width: 500px) {
+    /* Notes grid improvement */
+    #note > div[style*='grid-template-columns'] {
+      margin-top: 0;
+      margin-bottom: 0;
+      background: none;
+      box-shadow: none;
+      border: none;
+      padding: 0;
+    }
+    @media (max-width: 900px) {
+      #note > div[style*='grid-template-columns'] {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+    }
+    @media (max-width: 600px) {
       .container {
-        padding: 16px 4px;
-        max-width: 98vw;
+        padding: 14px 2px;
+        max-width: 99vw;
       }
       .hero h1 {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
+      }
+      .result-card {
+        padding: 14px 7px 10px 7px;
       }
     }
   </style>
@@ -172,9 +210,9 @@
   <div class="bg-accent2"></div>
   <div class="container">
     <div class="hero">
-      <h1>Last-Resort</h1>
+      <h1>last-resort</h1>
       <p>Your space to pair up and share daily notes with your chosen partner.<br>
-      <span style="color:#4ea1ff;">Pair. Write. Grow. Together.</span></p>
+      <span style="color:#5bbcff; font-style: italic;">Pair. Write. Grow. Together.</span></p>
     </div>
     <div class="nav">
       <button onclick="routeTo('register')" id="nav-register">Register</button>
@@ -227,19 +265,39 @@
 
     <!-- Notes -->
     <div id="note" class="hidden">
-      <h2>Submit or Update Note</h2>
-      <form onsubmit="submitNote(event)">
-        <label for="note-username">Your Username</label>
-        <input type="text" id="note-username" required placeholder="Your username" />
-        <label for="note-pair-id">Pair ID</label>
-        <input type="number" id="note-pair-id" required placeholder="Pair ID" />
-        <label for="note-date">Date</label>
-        <input type="date" id="note-date" required />
-        <label for="note-text">Note</label>
-        <textarea id="note-text" required placeholder="Write your note..."></textarea>
-        <button type="submit">Submit/Update Note</button>
-      </form>
-      <div class="msg" id="note-msg"></div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <!-- Submit New Note -->
+        <div class="result-card" style="margin: 0;">
+          <h2 style="margin-top: 0;">Submit New Note</h2>
+          <form onsubmit="submitNote(event)">
+            <label for="note-username">Your Username</label>
+            <input type="text" id="note-username" required placeholder="Your username" />
+            <label for="note-pair-id">Pair ID</label>
+            <input type="number" id="note-pair-id" required placeholder="Pair ID" />
+            <label for="note-text">Note</label>
+            <textarea id="note-text" required placeholder="Write your note..."></textarea>
+            <button type="submit">Submit Note</button>
+          </form>
+          <div class="msg" id="note-msg"></div>
+        </div>
+
+        <!-- Update Existing Note -->
+        <div class="result-card" style="margin: 0;">
+          <h2 style="margin-top: 0;">Update Existing Note</h2>
+          <form onsubmit="updateNote(event)">
+            <label for="update-username">Your Username</label>
+            <input type="text" id="update-username" required placeholder="Your username" />
+            <label for="update-pair-id">Pair ID</label>
+            <input type="number" id="update-pair-id" required placeholder="Pair ID" />
+            <label for="update-date">Date</label>
+            <input type="date" id="update-date" required />
+            <label for="update-text">Updated Note</label>
+            <textarea id="update-text" required placeholder="Write your updated note..."></textarea>
+            <button type="submit">Update Note</button>
+          </form>
+          <div class="msg" id="update-msg"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Get Partner Note -->
@@ -290,19 +348,29 @@
       const password = document.getElementById('reg-password').value;
       const msg = document.getElementById('register-msg');
       try {
-        const res = await fetch('http://localhost:8000/register', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ username, email, password })
+        const res = await fetch(`http://localhost:8000/register?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
+          method: 'POST'
         });
         const data = await res.json();
         if (res.ok) {
           msg.textContent = 'Registered successfully! You can now get your details.';
         } else {
-          msg.textContent = data.detail || 'Registration failed.';
+          // Handle validation errors
+          if (data.detail) {
+            if (Array.isArray(data.detail)) {
+              // Handle multiple validation errors
+              msg.textContent = data.detail.map(err => err.msg).join(', ');
+            } else {
+              // Handle single error message
+              msg.textContent = data.detail;
+            }
+          } else {
+            msg.textContent = 'Registration failed. Please try again.';
+          }
         }
       } catch (e) {
-        msg.textContent = 'Network error.';
+        console.error('Registration error:', e);
+        msg.textContent = 'Network error. Please try again.';
       }
     }
 
@@ -320,12 +388,47 @@
         });
         const data = await res.json();
         if (res.ok) {
-          msg.textContent = `Welcome, ${data.user.username}! Your user ID is ${data.user.user_id}.`;
+          const user = data.user;
+          const pairs = user.pairs;
+          let pairsHtml = '';
+          
+          if (pairs && pairs.length > 0) {
+            pairsHtml = pairs.map(p => `
+              <div class="result-card">
+                <strong>Pair ID:</strong> ${p.pair_id}<br>
+                <strong>Partner:</strong> ${p.partner}<br>
+                <strong>Created:</strong> ${new Date(p.created_at).toLocaleString()}
+              </div>
+            `).join('');
+          } else {
+            pairsHtml = '<div class="result-card">No pairs found</div>';
+          }
+
+          msg.innerHTML = `
+            <div class="result-card">
+              <strong>User Details:</strong><br>
+              <strong>Username:</strong> ${user.username}<br>
+              <strong>Email:</strong> ${user.email}<br>
+              <strong>User ID:</strong> ${user.user_id}<br>
+              <strong>Account Created:</strong> ${new Date(user.created_at).toLocaleString()}
+            </div>
+            <h3 style="margin-top: 20px;">Your Pairs:</h3>
+            ${pairsHtml}
+          `;
         } else {
-          msg.textContent = data.detail || 'Could not get details.';
+          if (data.detail) {
+            if (Array.isArray(data.detail)) {
+              msg.textContent = data.detail.map(err => err.msg).join(', ');
+            } else {
+              msg.textContent = data.detail;
+            }
+          } else {
+            msg.textContent = 'Login failed. Please try again.';
+          }
         }
       } catch (e) {
-        msg.textContent = 'Network error.';
+        console.error('Login error:', e);
+        msg.textContent = 'Network error. Please try again.';
       }
     }
 
@@ -336,19 +439,32 @@
       const user_b_username = document.getElementById('pair-user-b').value;
       const msg = document.getElementById('pair-msg');
       try {
-        const res = await fetch('http://localhost:8000/create_pair', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ user_a_username, user_b_username })
+        const res = await fetch(`http://localhost:8000/create_pair?user_a_username=${encodeURIComponent(user_a_username)}&user_b_username=${encodeURIComponent(user_b_username)}`, {
+          method: 'POST'
         });
         const data = await res.json();
         if (res.ok) {
-          msg.textContent = `Pair created! Pair ID: ${data.pair_id}`;
+          msg.innerHTML = `
+            <div class="result-card">
+              <strong>Success!</strong><br>
+              ${data.message}<br>
+              <strong>Pair ID:</strong> ${data.pair_id}
+            </div>
+          `;
         } else {
-          msg.textContent = data.detail || 'Pair creation failed.';
+          if (data.detail) {
+            if (Array.isArray(data.detail)) {
+              msg.textContent = data.detail.map(err => err.msg).join(', ');
+            } else {
+              msg.textContent = data.detail;
+            }
+          } else {
+            msg.textContent = 'Pair creation failed. Please try again.';
+          }
         }
       } catch (e) {
-        msg.textContent = 'Network error.';
+        console.error('Pair creation error:', e);
+        msg.textContent = 'Network error. Please try again.';
       }
     }
 
@@ -357,21 +473,73 @@
       event.preventDefault();
       const username = document.getElementById('note-username').value;
       const pair_id = document.getElementById('note-pair-id').value;
-      const date = document.getElementById('note-date').value;
       const entry = document.getElementById('note-text').value;
       const msg = document.getElementById('note-msg');
       try {
-        const res = await fetch(`http://localhost:8000/add_note_entry?pair_id=${pair_id}&date=${date}&username=${username}&entry=${encodeURIComponent(entry)}`, {
+        const res = await fetch(`http://localhost:8000/submit_entry?pair_id=${pair_id}&username=${encodeURIComponent(username)}&entry=${encodeURIComponent(entry)}`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.innerHTML = `
+            <div style="color: #5bbcff; margin-top: 12px; text-align: center;">
+              <strong>Success!</strong><br>
+              Your note has been submitted successfully.
+            </div>
+          `;
+          document.getElementById('note-text').value = '';
+        } else {
+          if (data.detail) {
+            if (Array.isArray(data.detail)) {
+              msg.textContent = data.detail.map(err => err.msg).join(', ');
+            } else {
+              msg.textContent = data.detail;
+            }
+          } else {
+            msg.textContent = 'Note submission failed. Please try again.';
+          }
+        }
+      } catch (e) {
+        console.error('Note submission error:', e);
+        msg.textContent = 'Network error. Please try again.';
+      }
+    }
+
+    // Update Note
+    async function updateNote(event) {
+      event.preventDefault();
+      const username = document.getElementById('update-username').value;
+      const pair_id = document.getElementById('update-pair-id').value;
+      const date = document.getElementById('update-date').value;
+      const entry = document.getElementById('update-text').value;
+      const msg = document.getElementById('update-msg');
+      try {
+        const res = await fetch(`http://localhost:8000/add_note_entry?pair_id=${pair_id}&date=${date}&username=${encodeURIComponent(username)}&entry=${encodeURIComponent(entry)}`, {
           method: 'PUT'
         });
         const data = await res.json();
         if (res.ok) {
-          msg.textContent = 'Note submitted/updated!';
+          msg.innerHTML = `
+            <div style="color: #5bbcff; margin-top: 12px; text-align: center;">
+              <strong>Success!</strong><br>
+              Your note has been updated successfully.
+            </div>
+          `;
+          document.getElementById('update-text').value = '';
         } else {
-          msg.textContent = data.detail || 'Note submission failed.';
+          if (data.detail) {
+            if (Array.isArray(data.detail)) {
+              msg.textContent = data.detail.map(err => err.msg).join(', ');
+            } else {
+              msg.textContent = data.detail;
+            }
+          } else {
+            msg.textContent = 'Note update failed. Please try again.';
+          }
         }
       } catch (e) {
-        msg.textContent = 'Network error.';
+        console.error('Note update error:', e);
+        msg.textContent = 'Network error. Please try again.';
       }
     }
 
