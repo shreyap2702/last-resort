@@ -212,32 +212,42 @@ def submit_entry(pair_id: int, username: str, entry: str, session: SessionDep):
     return {"message": "Entry submitted successfully", "note_id": note_obj.note_id}
 
 @app.put("/add_note_entry")
-def add_note_entry(pair_id: int, date: date, user_id: int, entry: str, session:SessionDep):
-    
+def add_note_entry(username: str, pair_id: int, date: date, entry: str, session: SessionDep):
+    # Fetch the user
+    user = session.exec(select(User).where(User.username == username)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Fetch the pair
     pair_obj = session.exec(select(pair).where(pair.pair_id == pair_id)).first()
     if not pair_obj:
-        raise HTTPException(status_code = 404, detail = "Pair does not exists")
-    
+        raise HTTPException(status_code=404, detail="Pair does not exist")
+
+    # Confirm the user is part of the pair
+    if username != pair_obj.user_a_name and username != pair_obj.user_b_name:
+        raise HTTPException(status_code=403, detail="User is not part of the pair")
+
+    # Fetch the note for the given pair and date
     note_obj = session.exec(
-        select(note).where((note.pair_id == pair_id) & (note.date == date)).first()
-    )
+        select(note).where((note.pair_id == pair_id) & (note.date == date))
+    ).first()
     if not note_obj:
-        raise HTTPException(status_code=405, detail="Note for given pair and date not found")
-    
-    if user_id == pair_obj.user_a_name:
+        raise HTTPException(status_code=404, detail="Note for the given pair and date not found")
+
+    # Overwrite the entry based on which user is making the update
+    if username == pair_obj.user_a_name:
         note_obj.user_a_entry = entry
         note_obj.user_a_updated = datetime.utcnow()
-    elif user_id == pair_obj.user_b_name:
+    elif username == pair_obj.user_b_name:
         note_obj.user_b_entry = entry
         note_obj.user_b_updated = datetime.utcnow()
-    else:
-        raise HTTPException(status_code=403, detail = "User is not part of pair")
-        
+
     session.add(note_obj)
     session.commit()
     session.refresh(note_obj)
-    
+
     return {"message": "Note entry updated successfully", "note_id": note_obj.note_id}
+
 
 def delete_user(user_id: int, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.user_id == user_id)).first()
