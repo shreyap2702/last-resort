@@ -262,3 +262,39 @@ def delete_user(user_id: int, session: Session = Depends(get_session)):
 @app.delete("/users/{user_id}")
 def api_delete_user(user_id: int, session: Session = Depends(get_session)):
     return delete_user(user_id, session)
+
+from fastapi import Query
+
+@app.get("/get_partner_note")
+def get_partner_note(
+    pair_id: int,
+    username: str,
+    date: date = Query(default_factory=date.today),
+    session: SessionDep = Depends(get_session)
+):
+    pair_obj = session.exec(select(pair).where(pair.pair_id == pair_id)).first()
+    if not pair_obj:
+        raise HTTPException(status_code=404, detail="Pair not found")
+    if username != pair_obj.user_a_name and username != pair_obj.user_b_name:
+        raise HTTPException(status_code=403, detail="You are not a member of this pair")
+    note_obj = session.exec(
+        select(note).where((note.pair_id == pair_id) & (note.date == date))
+    ).first()
+    if not note_obj:
+        raise HTTPException(status_code=404, detail="No note found for this date")
+    # Determine partner and their entry
+    if username == pair_obj.user_a_name:
+        partner_name = pair_obj.user_b_name
+        partner_entry = note_obj.user_b_entry
+        updated = note_obj.user_b_updated
+    else:
+        partner_name = pair_obj.user_a_name
+        partner_entry = note_obj.user_a_entry
+        updated = note_obj.user_a_updated
+    if not partner_entry:
+        return {"message": f"No note from {partner_name} for this date."}
+    return {
+        "partner": partner_name,
+        "entry": partner_entry,
+        "updated": updated
+    }
