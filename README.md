@@ -1,10 +1,10 @@
-# Last‑Resort ✍️
+# Last‑Resort 
 
 **Last-Resort** is a simple and thoughtful web app where users can pair with friends and exchange private daily notes — one in the morning and one at night. Built with minimal design and maximum clarity, it's your last resort for daily connection.
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 - **Frontend:** HTML/CSS/JS 
 - **Backend:** FastAPI with SQLModel
@@ -12,17 +12,17 @@
 
 ---
 
-## 🚀 Features
+##  Features
 
-- 👤 **Create User**: Add yourself to the system.
-- 🤝 **Create Pair**: Connect with a friend.
-- 📝 **View Notes**: Share and view morning/night notes with your pair.
+- **Create User**: Add yourself to the system.
+- **Create Pair**: Connect with a friend.
+- **View Notes**: Share and view morning/night notes with your pair.
 
 Each pair is private — only the two users in a pair can view their shared notes.
 
 ---
 
-## 📦 Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the repository
 ```bash
