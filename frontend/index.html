@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Last-Resort</title>
-  <!-- Use only Inter for a simple, elegant look -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Sora font for a modern, elegant look -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Inter', system-ui, Arial, sans-serif;
+      font-family: 'Sora', system-ui, Arial, sans-serif;
       margin: 0;
       padding: 0;
       background: linear-gradient(120deg, #1a2233 0%, #232b3b 100%);
@@ -16,12 +16,12 @@
       min-height: 100vh;
     }
     .container {
-      max-width: 440px;
+      max-width: 480px;
       margin: 40px auto;
       padding: 32px 24px;
-      background: #232837cc;
+      background: #232837e6;
       box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-      border-radius: 18px;
+      border-radius: 20px;
       position: relative;
       z-index: 2;
     }
@@ -30,11 +30,12 @@
       margin-bottom: 32px;
     }
     .hero h1 {
-      font-size: 2.2rem;
+      font-size: 2.3rem;
       font-weight: 700;
       color: #4ea1ff;
       margin-bottom: 8px;
       letter-spacing: 1px;
+      font-family: 'Sora', Arial, sans-serif;
     }
     .hero p {
       color: #b3c6e0;
@@ -52,12 +53,13 @@
       background: #181c24;
       color: #4ea1ff;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 10px 0;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
+      font-family: inherit;
     }
     .nav button.active, .nav button:hover {
       background: #4ea1ff;
@@ -65,7 +67,7 @@
     }
     h2 {
       color: #e6eaf3;
-      font-family: 'Inter', Arial, sans-serif;
+      font-family: 'Sora', Arial, sans-serif;
       margin-bottom: 12px;
       font-weight: 600;
       font-size: 1.3rem;
@@ -86,7 +88,7 @@
       background: #181c24;
       color: #e6eaf3;
       border: 1.5px solid #2d3957;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 10px 12px;
       font-size: 1rem;
       transition: border 0.2s, box-shadow 0.2s;
@@ -101,7 +103,7 @@
       background: #4ea1ff;
       color: #181c24;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 10px 0;
       font-size: 1rem;
       font-weight: 600;
@@ -121,6 +123,16 @@
       color: #4ea1ff;
       font-size: 1rem;
       text-align: center;
+    }
+    .result-card {
+      background: #181c24;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 16px;
+      color: #e6eaf3;
+      box-shadow: 0 2px 8px #0002;
+      font-size: 1rem;
+      word-break: break-word;
     }
     .bg-accent {
       position: fixed;
@@ -169,6 +181,7 @@
       <button onclick="routeTo('get-user')" id="nav-get-user">Get Your User Details</button>
       <button onclick="routeTo('pair')" id="nav-pair">Pair Up</button>
       <button onclick="routeTo('note')" id="nav-note">Notes</button>
+      <button onclick="routeTo('partner-note')" id="nav-partner-note">Get Partner Note</button>
     </div>
 
     <!-- Register -->
@@ -228,10 +241,26 @@
       </form>
       <div class="msg" id="note-msg"></div>
     </div>
+
+    <!-- Get Partner Note -->
+    <div id="partner-note" class="hidden">
+      <h2>Get Partner's Note</h2>
+      <form onsubmit="getPartnerNote(event)">
+        <label for="partner-pair-id">Pair ID</label>
+        <input type="number" id="partner-pair-id" required placeholder="Pair ID" />
+        <label for="partner-username">Your Username</label>
+        <input type="text" id="partner-username" required placeholder="Your username" />
+        <label for="partner-date">Date (optional)</label>
+        <input type="date" id="partner-date" />
+        <button type="submit">Get Partner Note</button>
+      </form>
+      <div class="msg" id="partner-note-msg"></div>
+      <div id="partner-note-result"></div>
+    </div>
   </div>
   <script>
     // Routing logic using hash
-    const pages = ['register', 'get-user', 'pair', 'note'];
+    const pages = ['register', 'get-user', 'pair', 'note', 'partner-note'];
     function routeTo(page) {
       window.location.hash = page;
     }
@@ -244,10 +273,11 @@
       });
       document.getElementById(page).classList.remove('hidden');
       document.getElementById('nav-' + page).classList.add('active');
-      // Clear messages
-      ['register-msg', 'login-msg', 'pair-msg', 'note-msg'].forEach(msg => {
+      // Clear messages and results
+      ['register-msg', 'login-msg', 'pair-msg', 'note-msg', 'partner-note-msg'].forEach(msg => {
         document.getElementById(msg).textContent = '';
       });
+      document.getElementById('partner-note-result').innerHTML = '';
     }
     window.addEventListener('hashchange', showPageFromHash);
     window.addEventListener('DOMContentLoaded', showPageFromHash);
@@ -339,6 +369,41 @@
           msg.textContent = 'Note submitted/updated!';
         } else {
           msg.textContent = data.detail || 'Note submission failed.';
+        }
+      } catch (e) {
+        msg.textContent = 'Network error.';
+      }
+    }
+
+    // Get Partner Note
+    async function getPartnerNote(event) {
+      event.preventDefault();
+      const pair_id = document.getElementById('partner-pair-id').value;
+      const username = document.getElementById('partner-username').value;
+      const date = document.getElementById('partner-date').value;
+      const msg = document.getElementById('partner-note-msg');
+      const resultDiv = document.getElementById('partner-note-result');
+      msg.textContent = '';
+      resultDiv.innerHTML = '';
+      let url = `http://localhost:8000/get_partner_note?pair_id=${pair_id}&username=${encodeURIComponent(username)}`;
+      if (date) url += `&date=${date}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (res.ok) {
+          if (data.entry) {
+            resultDiv.innerHTML = `
+              <div class="result-card">
+                <strong>Partner:</strong> ${data.partner}<br>
+                <strong>Note:</strong> ${data.entry}<br>
+                <strong>Last updated:</strong> ${data.updated ? new Date(data.updated).toLocaleString() : 'N/A'}
+              </div>
+            `;
+          } else if (data.message) {
+            resultDiv.innerHTML = `<div class="result-card">${data.message}</div>`;
+          }
+        } else {
+          msg.textContent = data.detail || 'Could not get partner note.';
         }
       } catch (e) {
         msg.textContent = 'Network error.';

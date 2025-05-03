@@ -9,6 +9,12 @@ from datetime import datetime, timedelta
 from typing import Union
 from passlib.context import CryptContext
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
+
+
+
 class User(SQLModel, table=True):
     user_id : int = Field(default=None, primary_key=True)
     username: str = Field(index=True, unique=True)
@@ -78,9 +84,15 @@ def get_session():
 SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI()
+
+# Mount the frontend directory for static files
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+# Serve index.html at the root URL
 @app.get("/")
-def read_root():
-    return {"message": "Welcome to the FastAPI app!"}
+def read_index():
+    return FileResponse(os.path.join("frontend", "index.html"))
+    
 from fastapi.responses import FileResponse
 
 
@@ -269,8 +281,9 @@ from fastapi import Query
 def get_partner_note(
     pair_id: int,
     username: str,
-    date: date = Query(default_factory=date.today),
-    session: SessionDep = Depends(get_session)
+    session: SessionDep,
+    date: date = Query(default_factory=date.today)
+
 ):
     pair_obj = session.exec(select(pair).where(pair.pair_id == pair_id)).first()
     if not pair_obj:
