@@ -283,3 +283,9 @@ async def get_partner_note(pair_id: int, username: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000) 
+
+from fastapi.responses import FileResponse
+
+@app.get("/download_db")
+def download_db():
+       return FileResponse("database.db", filename="database.db")
