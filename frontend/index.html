@@ -348,7 +348,7 @@
       const password = document.getElementById('reg-password').value;
       const msg = document.getElementById('register-msg');
       try {
-        const res = await fetch(`http://localhost:8000/register?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
+        const res = await fetch(`https://last-resort.onrender.com/register?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
           method: 'POST'
         });
         const data = await res.json();
@@ -381,7 +381,7 @@
       const password = document.getElementById('login-password').value;
       const msg = document.getElementById('login-msg');
       try {
-        const res = await fetch('http://localhost:8000/login', {
+        const res = await fetch('https://last-resort.onrender.com/login', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ email, password })
@@ -439,7 +439,7 @@
       const user_b_username = document.getElementById('pair-user-b').value;
       const msg = document.getElementById('pair-msg');
       try {
-        const res = await fetch(`http://localhost:8000/create_pair?user_a_username=${encodeURIComponent(user_a_username)}&user_b_username=${encodeURIComponent(user_b_username)}`, {
+        const res = await fetch(`https://last-resort.onrender.com/create_pair?user_a_username=${encodeURIComponent(user_a_username)}&user_b_username=${encodeURIComponent(user_b_username)}`, {
           method: 'POST'
         });
         const data = await res.json();
@@ -476,7 +476,7 @@
       const entry = document.getElementById('note-text').value;
       const msg = document.getElementById('note-msg');
       try {
-        const res = await fetch(`http://localhost:8000/submit_entry?pair_id=${pair_id}&username=${encodeURIComponent(username)}&entry=${encodeURIComponent(entry)}`, {
+        const res = await fetch(`https://last-resort.onrender.com/submit_entry?pair_id=${pair_id}&username=${encodeURIComponent(username)}&entry=${encodeURIComponent(entry)}`, {
           method: 'POST'
         });
         const data = await res.json();
@@ -514,7 +514,7 @@
       const entry = document.getElementById('update-text').value;
       const msg = document.getElementById('update-msg');
       try {
-        const res = await fetch(`http://localhost:8000/add_note_entry?pair_id=${pair_id}&date=${date}&username=${encodeURIComponent(username)}&entry=${encodeURIComponent(entry)}`, {
+        const res = await fetch(`https://last-resort.onrender.com/add_note_entry?pair_id=${pair_id}&date=${date}&username=${encodeURIComponent(username)}&entry=${encodeURIComponent(entry)}`, {
           method: 'PUT'
         });
         const data = await res.json();
@@ -553,7 +553,7 @@
       const resultDiv = document.getElementById('partner-note-result');
       msg.textContent = '';
       resultDiv.innerHTML = '';
-      let url = `http://localhost:8000/get_partner_note?pair_id=${pair_id}&username=${encodeURIComponent(username)}`;
+      let url = `https://last-resort.onrender.com/get_partner_note?pair_id=${pair_id}&username=${encodeURIComponent(username)}`;
       if (date) url += `&date=${date}`;
       try {
         const res = await fetch(url);
