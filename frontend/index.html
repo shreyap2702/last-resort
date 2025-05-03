@@ -1,13 +1,349 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Last-Resort</title>
+  <!-- Use only Inter for a simple, elegant look -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #1a2233 0%, #232b3b 100%);
+      color: #e6eaf3;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 440px;
+      margin: 40px auto;
+      padding: 32px 24px;
+      background: #232837cc;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      border-radius: 18px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #4ea1ff;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .hero p {
+      color: #b3c6e0;
+      font-size: 1.1rem;
+      margin-bottom: 0;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 8px;
+    }
+    .nav button {
+      flex: 1;
+      background: #181c24;
+      color: #4ea1ff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav button.active, .nav button:hover {
+      background: #4ea1ff;
+      color: #181c24;
+    }
+    h2 {
+      color: #e6eaf3;
+      font-family: 'Inter', Arial, sans-serif;
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    label {
+      font-size: 0.98rem;
+      color: #b3c6e0;
+      margin-bottom: 2px;
+    }
+    input, textarea {
+      font-family: inherit;
+      background: #181c24;
+      color: #e6eaf3;
+      border: 1.5px solid #2d3957;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 1rem;
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus, textarea:focus {
+      border: 1.5px solid #4ea1ff;
+      box-shadow: 0 0 0 2px #4ea1ff33;
+    }
+    button[type="submit"] {
+      font-family: inherit;
+      background: #4ea1ff;
+      color: #181c24;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+    button[type="submit"]:hover, button[type="submit"]:focus {
+      background: #82c4ff;
+      color: #181c24;
+    }
+    .hidden {
+      display: none;
+    }
+    .msg {
+      margin: 10px 0 0 0;
+      color: #4ea1ff;
+      font-size: 1rem;
+      text-align: center;
+    }
+    .bg-accent {
+      position: fixed;
+      top: -120px;
+      left: -120px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #4ea1ff55 0%, #232b3b00 80%);
+      z-index: 0;
+      filter: blur(8px);
+      pointer-events: none;
+    }
+    .bg-accent2 {
+      position: fixed;
+      bottom: -120px;
+      right: -120px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #4ea1ff33 0%, #232b3b00 80%);
+      z-index: 0;
+      filter: blur(12px);
+      pointer-events: none;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 16px 4px;
+        max-width: 98vw;
+      }
+      .hero h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-accent"></div>
+  <div class="bg-accent2"></div>
+  <div class="container">
+    <div class="hero">
+      <h1>Last-Resort</h1>
+      <p>Your space to pair up and share daily notes with your chosen partner.<br>
+      <span style="color:#4ea1ff;">Pair. Write. Grow. Together.</span></p>
+    </div>
+    <div class="nav">
+      <button onclick="routeTo('register')" id="nav-register">Register</button>
+      <button onclick="routeTo('get-user')" id="nav-get-user">Get Your User Details</button>
+      <button onclick="routeTo('pair')" id="nav-pair">Pair Up</button>
+      <button onclick="routeTo('note')" id="nav-note">Notes</button>
+    </div>
+
+    <!-- Register -->
+    <div id="register" class="">
+      <h2>Create Account</h2>
+      <form onsubmit="registerUser(event)">
+        <label for="reg-username">Username</label>
+        <input type="text" id="reg-username" required placeholder="e.g. alice" />
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" required placeholder="e.g. alice@email.com" />
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" required placeholder="Password" />
+        <button type="submit">Register</button>
+      </form>
+      <div class="msg" id="register-msg"></div>
+    </div>
+
+    <!-- Get User Details (Login) -->
+    <div id="get-user" class="hidden">
+      <h2>Get Your User Details</h2>
+      <form onsubmit="loginUser(event)">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required placeholder="e.g. alice@email.com" />
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required placeholder="Password" />
+        <button type="submit">Get Details</button>
+      </form>
+      <div class="msg" id="login-msg"></div>
+    </div>
+
+    <!-- Pair Up -->
+    <div id="pair" class="hidden">
+      <h2>Create Pair</h2>
+      <form onsubmit="createPair(event)">
+        <label for="pair-user-a">Your Username</label>
+        <input type="text" id="pair-user-a" required placeholder="Your username" />
+        <label for="pair-user-b">Partner's Username</label>
+        <input type="text" id="pair-user-b" required placeholder="Partner's username" />
+        <button type="submit">Create Pair</button>
+      </form>
+      <div class="msg" id="pair-msg"></div>
+    </div>
+
+    <!-- Notes -->
+    <div id="note" class="hidden">
+      <h2>Submit or Update Note</h2>
+      <form onsubmit="submitNote(event)">
+        <label for="note-username">Your Username</label>
+        <input type="text" id="note-username" required placeholder="Your username" />
+        <label for="note-pair-id">Pair ID</label>
+        <input type="number" id="note-pair-id" required placeholder="Pair ID" />
+        <label for="note-date">Date</label>
+        <input type="date" id="note-date" required />
+        <label for="note-text">Note</label>
+        <textarea id="note-text" required placeholder="Write your note..."></textarea>
+        <button type="submit">Submit/Update Note</button>
+      </form>
+      <div class="msg" id="note-msg"></div>
+    </div>
+  </div>
+  <script>
+    // Routing logic using hash
+    const pages = ['register', 'get-user', 'pair', 'note'];
+    function routeTo(page) {
+      window.location.hash = page;
+    }
+    function showPageFromHash() {
+      let page = window.location.hash.replace('#', '') || 'register';
+      if (!pages.includes(page)) page = 'register';
+      pages.forEach(p => {
+        document.getElementById(p).classList.add('hidden');
+        document.getElementById('nav-' + p).classList.remove('active');
+      });
+      document.getElementById(page).classList.remove('hidden');
+      document.getElementById('nav-' + page).classList.add('active');
+      // Clear messages
+      ['register-msg', 'login-msg', 'pair-msg', 'note-msg'].forEach(msg => {
+        document.getElementById(msg).textContent = '';
+      });
+    }
+    window.addEventListener('hashchange', showPageFromHash);
+    window.addEventListener('DOMContentLoaded', showPageFromHash);
+
+    // Register
+    async function registerUser(event) {
+      event.preventDefault();
+      const username = document.getElementById('reg-username').value;
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const msg = document.getElementById('register-msg');
+      try {
+        const res = await fetch('http://localhost:8000/register', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ username, email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = 'Registered successfully! You can now get your details.';
+        } else {
+          msg.textContent = data.detail || 'Registration failed.';
+        }
+      } catch (e) {
+        msg.textContent = 'Network error.';
+      }
+    }
+
+    // Get User Details (Login)
+    async function loginUser(event) {
+      event.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const msg = document.getElementById('login-msg');
+      try {
+        const res = await fetch('http://localhost:8000/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = `Welcome, ${data.user.username}! Your user ID is ${data.user.user_id}.`;
+        } else {
+          msg.textContent = data.detail || 'Could not get details.';
+        }
+      } catch (e) {
+        msg.textContent = 'Network error.';
+      }
+    }
+
+    // Create Pair
+    async function createPair(event) {
+      event.preventDefault();
+      const user_a_username = document.getElementById('pair-user-a').value;
+      const user_b_username = document.getElementById('pair-user-b').value;
+      const msg = document.getElementById('pair-msg');
+      try {
+        const res = await fetch('http://localhost:8000/create_pair', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ user_a_username, user_b_username })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = `Pair created! Pair ID: ${data.pair_id}`;
+        } else {
+          msg.textContent = data.detail || 'Pair creation failed.';
+        }
+      } catch (e) {
+        msg.textContent = 'Network error.';
+      }
+    }
+
+    // Submit/Update Note
+    async function submitNote(event) {
+      event.preventDefault();
+      const username = document.getElementById('note-username').value;
+      const pair_id = document.getElementById('note-pair-id').value;
+      const date = document.getElementById('note-date').value;
+      const entry = document.getElementById('note-text').value;
+      const msg = document.getElementById('note-msg');
+      try {
+        const res = await fetch(`http://localhost:8000/add_note_entry?pair_id=${pair_id}&date=${date}&username=${username}&entry=${encodeURIComponent(entry)}`, {
+          method: 'PUT'
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = 'Note submitted/updated!';
+        } else {
+          msg.textContent = data.detail || 'Note submission failed.';
+        }
+      } catch (e) {
+        msg.textContent = 'Network error.';
+      }
+    }
+  </script>
+</body>
 </html>
